@@ -27,6 +27,7 @@ class ReadGauge(Component):
         self.gauge_min_value = self.request.get_param("GaugeMinimumValue")
         self.gauge_max_value = self.request.get_param("GaugeMaximumValue")
         self.use_longer_arc = self.request.get_param("UseLongerArc")
+        self.reading_precision = self.request.get_param("ReadingPrecision")
 
         self.namedict = {
             0: "center",
@@ -110,18 +111,18 @@ class ReadGauge(Component):
             reading = self.gauge_min_value
 
         return {
-            'reading': reading,
-            'tip_angle': tip_angle,
-            'min_angle': min_angle,
-            'max_angle': max_angle,
-            'tip_radius': tip_radius,
-            'min_radius': min_radius,
-            'max_radius': max_radius,
-            'gauge_scale_radius': gauge_scale_radius,
-            'angle_range': angle_range,
-            'tip_offset': tip_offset,
+            'reading': round(reading, self.reading_precision),
+            'tip_angle': round(tip_angle, self.reading_precision),
+            'min_angle': round(min_angle, self.reading_precision),
+            'max_angle': round(max_angle, self.reading_precision),
+            'tip_radius': round(tip_radius, self.reading_precision),
+            'min_radius': round(min_radius, self.reading_precision),
+            'max_radius': round(max_radius, self.reading_precision),
+            'gauge_scale_radius': round(gauge_scale_radius, self.reading_precision),
+            'angle_range': round(angle_range, self.reading_precision),
+            'tip_offset': round(tip_offset, self.reading_precision),
             'direction': direction,
-            'percentage': (tip_offset / angle_range * 100) if angle_range != 0 else 0
+            'percentage': round((tip_offset / angle_range * 100) if angle_range != 0 else 0, self.reading_precision)
         }
 
     def output_result(self, output, img_uid):

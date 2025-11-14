@@ -103,6 +103,15 @@ class ConfigUseLongerArc(Config):
     class Config:
         title = "Use Longer Arc"
 
+class ConfigReadingPrecision(Config):
+    name: Literal["ReadingPrecision"] = "ReadingPrecision"
+    value: int = Field(ge=0, le=12, default=2)
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Reading Precision"
+
 
 
 
@@ -225,6 +234,7 @@ class ReadGaugeConfigs(Configs):
     gaugeMinimumValue: ConfigGaugeMinimumValue
     gaugeMaximumValue: ConfigGaugeMaximumValue
     useLongerArc: ConfigUseLongerArc
+    readingPrecision: ConfigReadingPrecision
 
     class Config:
         title = "Read Gauge Configurations"
