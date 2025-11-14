@@ -29,13 +29,12 @@ class ReadGauge(Component):
         self.use_longer_arc = self.request.get_param("UseLongerArc")
 
         self.namedict = {
-            0: "gauge",
-            1: "center",
-            2: "tip",
+            0: "center",
+            1: "gauge",
+            2: "max",
             3: "min",
-            4: "max"
+            4: "tip"
         }
-
     @staticmethod
     def bootstrap(config: dict) -> dict:
         model = load_model(config=config)
