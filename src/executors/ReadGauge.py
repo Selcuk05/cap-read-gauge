@@ -41,24 +41,24 @@ class ReadGauge(Component):
         model = load_model(config=config)
         return {"model": model}
 
-    def get_center_point(bbox):
+    def get_center_point(self, bbox):
         x1, y1, x2, y2 = bbox[0], bbox[1], bbox[2], bbox[3]
         return ((x1 + x2) / 2, (y1 + y2) / 2)
 
-    def calculate_angle(center, point):
+    def calculate_angle(self, center, point):
         dx = point[0] - center[0]
         dy = point[1] - center[1]
         angle = math.atan2(-dy, dx)  # negative dy because y axis different in image
         return math.degrees(angle)
 
-    def normalize_angle(angle):
+    def normalize_angle(self, angle):
         while angle < 0:
             angle += 360
         while angle >= 360:
             angle -= 360
         return angle
 
-    def calculate_distance(p1, p2): # euclidean
+    def calculate_distance(self, p1, p2): # euclidean
         return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)
 
     def calculate_gauge_reading(self, center_pos, tip_pos, min_pos, max_pos):
@@ -202,7 +202,7 @@ class ReadGauge(Component):
                 positions['max']
             )
             
-            self.reading = calculation_result['reading']
+            self.reading = calculation_result
         else:
             missing = [k for k, v in positions.items() if v is None]
             print(f"Cannot calculate reading - missing: {', '.join(missing)}")
