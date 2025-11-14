@@ -1,7 +1,18 @@
-
 from pydantic import Field, validator
 from typing import List, Optional, Union, Literal
-from sdks.novavision.src.base.model import Package, Image, Inputs, Configs, Outputs, Response, Request, Output, Input, Config
+from sdks.novavision.src.base.model import (
+    Package,
+    Image,
+    Inputs,
+    Configs,
+    Outputs,
+    Response,
+    Request,
+    Output,
+    Input,
+    Config,
+    Detection,
+)
 
 
 class InputImage(Input):
@@ -21,35 +32,112 @@ class InputImage(Input):
         title = "Image"
 
 
-class OutputImage(Output):
-    name: Literal["outputImage"] = "outputImage"
-    value: Union[List[Image],Image]
+class OutputValue(Output):
+    name: Literal["outputValue"] = "outputValue"
+    value: dict
     type: str = "object"
 
-    @validator("type", pre=True, always=True)
-    def set_type_based_on_value(cls, value, values):
-        value = values.get('value')
-        if isinstance(value, Image):
-            return "object"
-        elif isinstance(value, list):
-            return "list"
+    class Config:
+        title = "Value"
+
+
+class OutputDetections(Output):
+    name: Literal["outputDetections"] = "outputDetections"
+    value: List[Detection]
+    type: str = "object"
 
     class Config:
-        title = "Image"
+        title = "Detections"
 
 
-class KeepSideFalse(Config):
-    name: Literal["False"] = "False"
+
+
+
+
+class ConfigGaugeMinimumValue(Config):
+    name: Literal["GaugeMinimumValue"] = "GaugeMinimumValue"
+    value: float = Field(ge=0)
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Minimum Value"
+
+
+class ConfigGaugeMaximumValue(Config):
+    name: Literal["GaugeMaximumValue"] = "GaugeMaximumValue"
+    value: float = Field(ge=0)
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Maximum Value"
+
+
+class ConfigUseLongerArcTrue(Config):
+    name: Literal["UseLongerArcTrue"] = "UseLongerArcTrue"
+    value: Literal[True] = True
+    type: Literal["bool"] = "bool"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Yes"
+
+
+class ConfigUseLongerArcFalse(Config):
+    name: Literal["UseLongerArcFalse"] = "UseLongerArcFalse"
     value: Literal[False] = False
     type: Literal["bool"] = "bool"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Disable"
+        title = "No"
 
 
-class KeepSideTrue(Config):
-    name: Literal["True"] = "True"
+class ConfigUseLongerArc(Config):
+    name: Literal["UseLongerArc"] = "UseLongerArc"
+    value: Union[ConfigUseLongerArcTrue, ConfigUseLongerArcFalse]
+    type: Literal["object"] = "object"
+    field: Literal["dropdownlist"] = "dropdownlist"
+
+    class Config:
+        title = "Use Longer Arc"
+
+
+
+
+
+
+class ConfigConfidenceThreshold(Config):
+    """
+    (0.0-1.0) Represents the confidence threshold value.
+    """
+
+    name: Literal["ConfidenceThreshold"] = "ConfidenceThreshold"
+    value: float = Field(default=0.3, ge=0, le=1)
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "Confidence Threshold"
+
+
+class ConfigIOUThreshold(Config):
+    """
+    (0.0-1.0) Represents the overlap threshold value.
+    """
+
+    name: Literal["IOUThreshold"] = "IOUThreshold"
+    value: float = Field(default=0.3, ge=0, le=1)
+    type: Literal["number"] = "number"
+    field: Literal["textInput"] = "textInput"
+
+    class Config:
+        title = "IOU Threshold"
+
+
+class ConfigHalfTrue(Config):
+    name: Literal["HalfTrue"] = "HalfTrue"
     value: Literal[True] = True
     type: Literal["bool"] = "bool"
     field: Literal["option"] = "option"
@@ -58,86 +146,122 @@ class KeepSideTrue(Config):
         title = "Enable"
 
 
-class KeepSideBBox(Config):
+class ConfigHalfFalse(Config):
+    name: Literal["HalfFalse"] = "HalfFalse"
+    value: Literal[False] = False
+    type: Literal["bool"] = "bool"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Disable"
+
+
+class ConfigHalf(Config):
     """
-        Rotate image without catting off sides.
+    It enables half-precision (FP16) inference, which can speed up model inference.
     """
-    name: Literal["KeepSide"] = "KeepSide"
-    value: Union[KeepSideTrue, KeepSideFalse]
+
+    name: Literal["Half"] = "Half"
+    value: Union[ConfigHalfTrue, ConfigHalfFalse]
     type: Literal["object"] = "object"
     field: Literal["dropdownlist"] = "dropdownlist"
+    restart: Literal[True] = True
 
     class Config:
-        title = "Keep Sides"
+        title = "Half"
 
 
-class Degree(Config):
-    """
-        Positive angles specify counterclockwise rotation while negative angles indicate clockwise rotation.
-    """
-    name: Literal["Degree"] = "Degree"
-    value: int = Field(ge=-359.0, le=359.0,default=0)
-    type: Literal["number"] = "number"
-    field: Literal["textInput"] = "textInput"
-    placeHolder: Literal["[-359, 359]"] = "[-359, 359]"
+class ConfigDeviceGPU(Config):
+    name: Literal["ConfigDeviceGPU"] = "ConfigDeviceGPU"
+    configHalf: ConfigHalf
+    value: Literal["GPU"] = "GPU"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
 
     class Config:
-        title = "Angle"
+        title = "GPU"
 
 
-class PackageInputs(Inputs):
+class ConfigDeviceCPU(Config):
+    name: Literal["ConfigDeviceCPU"] = "ConfigDeviceCPU"
+    value: Literal["CPU"] = "CPU"
+    type: Literal["string"] = "string"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "CPU"
+
+
+class ConfigDevice(Config):
+    """
+    It refers to whether the model should run on a CPU or a GPU.
+    You can select the device type for inference or training process.
+    """
+
+    name: Literal["ConfigDevice"] = "ConfigDevice"
+    value: Union[ConfigDeviceCPU, ConfigDeviceGPU]
+    type: Literal["object"] = "object"
+    field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
+    restart: Literal[True] = True
+
+    class Config:
+        title = "Device"
+
+
+class ReadGaugeInputs(Inputs):
     inputImage: InputImage
 
 
-class PackageConfigs(Configs):
-    degree: Degree
-    drawBBox: KeepSideBBox
+class ReadGaugeOutputs(Outputs):
+    outputValue: OutputValue
+    outputDetections: OutputDetections
 
 
-class PackageOutputs(Outputs):
-    outputImage: OutputImage
+class ReadGaugeConfigs(Configs):
+    configDevice: ConfigDevice
+    configConfidenceThreshold: ConfigConfidenceThreshold
+    configIOUThreshold: ConfigIOUThreshold
 
-
-class PackageRequest(Request):
-    inputs: Optional[PackageInputs]
-    configs: PackageConfigs
+    gaugeMinimumValue: ConfigGaugeMinimumValue
+    gaugeMaximumValue: ConfigGaugeMaximumValue
+    useLongerArc: ConfigUseLongerArc
 
     class Config:
-        json_schema_extra = {
-            "target": "configs"
-        }
+        title = "Read Gauge Configurations"
 
 
-class PackageResponse(Response):
-    outputs: PackageOutputs
+class ReadGaugeRequest(Request):
+    inputs: Optional[ReadGaugeInputs]
+    configs: ReadGaugeConfigs
+
+    class Config:
+        json_schema_extra = {"target": "configs"}
 
 
-class PackageExecutor(Config):
-    name: Literal["Package"] = "Package"
-    value: Union[PackageRequest, PackageResponse]
+class ReadGaugeResponse(Response):
+    outputs: ReadGaugeOutputs
+
+
+class ReadGauge(Config):
+    name: Literal["ReadGauge"] = "ReadGauge"
+    value: Union[ReadGaugeRequest, ReadGaugeResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Package"
-        json_schema_extra = {
-            "target": {
-                "value": 0
-            }
-        }
+        title = "Read Gauge"
+        json_schema_extra = {"target": {"value": 0}}
 
 
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[PackageExecutor]
+    value: Union[ReadGauge]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
     class Config:
         title = "Task"
-        json_schema_extra = {
-            "target": "value"
-        }
+        json_schema_extra = {"target": "value"}
 
 
 class PackageConfigs(Configs):
@@ -146,5 +270,5 @@ class PackageConfigs(Configs):
 
 class PackageModel(Package):
     configs: PackageConfigs
-    type: Literal["component"] = "component"
-    name: Literal["Package"] = "Package"
+    type: Literal["capsule"] = "capsule"
+    name: Literal["ReadGauge"] = "ReadGauge"
