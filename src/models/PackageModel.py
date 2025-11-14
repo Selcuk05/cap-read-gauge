@@ -32,13 +32,13 @@ class InputImage(Input):
         title = "Image"
 
 
-class OutputValue(Output):
-    name: Literal["outputValue"] = "outputValue"
+class OutputReading(Output):
+    name: Literal["outputReading"] = "outputReading"
     value: dict
     type: str = "object"
 
     class Config:
-        title = "Value"
+        title = "Reading"
 
 
 class OutputDetections(Output):
