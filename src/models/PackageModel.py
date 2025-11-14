@@ -213,7 +213,7 @@ class ReadGaugeInputs(Inputs):
 
 
 class ReadGaugeOutputs(Outputs):
-    outputValue: OutputValue
+    outputReading: OutputReading
     outputDetections: OutputDetections
 
 
