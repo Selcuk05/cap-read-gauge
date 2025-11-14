@@ -55,6 +55,9 @@ class OutputDetections(Output):
 
 
 class ConfigGaugeMinimumValue(Config):
+    """
+    Value equivalent to the minimum point on the gauge.
+    """
     name: Literal["GaugeMinimumValue"] = "GaugeMinimumValue"
     value: float = Field(ge=0)
     type: Literal["number"] = "number"
@@ -65,6 +68,9 @@ class ConfigGaugeMinimumValue(Config):
 
 
 class ConfigGaugeMaximumValue(Config):
+    """
+    Value equivalent to the maximum point on the gauge.
+    """
     name: Literal["GaugeMaximumValue"] = "GaugeMaximumValue"
     value: float = Field(ge=0)
     type: Literal["number"] = "number"
@@ -95,6 +101,9 @@ class ConfigUseLongerArcFalse(Config):
 
 
 class ConfigUseLongerArc(Config):
+    """
+    Select if the reader should use the longer arc, which is the longer side between the minimum and maximum points.
+    """
     name: Literal["UseLongerArc"] = "UseLongerArc"
     value: Union[ConfigUseLongerArcTrue, ConfigUseLongerArcFalse]
     type: Literal["object"] = "object"
@@ -104,6 +113,9 @@ class ConfigUseLongerArc(Config):
         title = "Use Longer Arc"
 
 class ConfigReadingPrecision(Config):
+    """
+    (0-12) Decimal reading precision of the value read from the gauge.
+    """
     name: Literal["ReadingPrecision"] = "ReadingPrecision"
     value: int = Field(ge=0, le=12, default=2)
     type: Literal["number"] = "number"
