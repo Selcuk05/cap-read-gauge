@@ -1,6 +1,6 @@
 
 from sdks.novavision.src.helper.package import PackageHelper
-from components.ReadGauge.src.models.PackageModel import PackageModel, PackageConfigs, ConfigExecutor, ReadGaugeOutputs, ReadGaugeResponse, ReadGauge, OutputDetections, OutputReading
+from capsules.ReadGauge.src.models.PackageModel import PackageModel, PackageConfigs, ConfigExecutor, ReadGaugeOutputs, ReadGaugeResponse, ReadGauge, OutputDetections, OutputReading
 
 
 def build_response(context):

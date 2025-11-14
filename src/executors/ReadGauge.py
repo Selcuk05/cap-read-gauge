@@ -9,9 +9,9 @@ from sdks.novavision.src.media.image import Image
 from sdks.novavision.src.base.component import Component
 from sdks.novavision.src.base.model import BoundingBox
 from sdks.novavision.src.helper.executor import Executor
-from components.ReadGauge.src.utils.utils import load_model
-from components.ReadGauge.src.utils.response import build_response
-from components.ReadGauge.src.models.PackageModel import PackageModel, Detection
+from capsules.ReadGauge.src.utils.utils import load_model
+from capsules.ReadGauge.src.utils.response import build_response
+from capsules.ReadGauge.src.models.PackageModel import PackageModel, Detection
 
 
 class ReadGauge(Component):
