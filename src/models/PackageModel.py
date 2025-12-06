@@ -22,7 +22,7 @@ class InputImage(Input):
 
     @validator("type", pre=True, always=True)
     def set_type_based_on_value(cls, value, values):
-        value = values.get('value')
+        value = values.get("value")
         if isinstance(value, Image):
             return "object"
         elif isinstance(value, list):
@@ -50,14 +50,11 @@ class OutputDetections(Output):
         title = "Detections"
 
 
-
-
-
-
 class ConfigGaugeMinimumValue(Config):
     """
     Value equivalent to the minimum point on the gauge.
     """
+
     name: Literal["GaugeMinimumValue"] = "GaugeMinimumValue"
     value: float = Field(ge=0)
     type: Literal["number"] = "number"
@@ -71,6 +68,7 @@ class ConfigGaugeMaximumValue(Config):
     """
     Value equivalent to the maximum point on the gauge.
     """
+
     name: Literal["GaugeMaximumValue"] = "GaugeMaximumValue"
     value: float = Field(ge=0)
     type: Literal["number"] = "number"
@@ -104,6 +102,7 @@ class ConfigUseLongerArc(Config):
     """
     Select if the reader should use the longer arc, which is the longer side between the minimum and maximum points.
     """
+
     name: Literal["UseLongerArc"] = "UseLongerArc"
     value: Union[ConfigUseLongerArcTrue, ConfigUseLongerArcFalse]
     type: Literal["object"] = "object"
@@ -112,10 +111,12 @@ class ConfigUseLongerArc(Config):
     class Config:
         title = "Use Longer Arc"
 
+
 class ConfigReadingPrecision(Config):
     """
     (0-12) Decimal reading precision of the value read from the gauge.
     """
+
     name: Literal["ReadingPrecision"] = "ReadingPrecision"
     value: int = Field(ge=0, le=12, default=2)
     type: Literal["number"] = "number"
@@ -123,10 +124,6 @@ class ConfigReadingPrecision(Config):
 
     class Config:
         title = "Reading Precision"
-
-
-
-
 
 
 class ConfigConfidenceThreshold(Config):
